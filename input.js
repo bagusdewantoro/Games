@@ -62,8 +62,9 @@ export class InputHandler {
       }
       // up/down
       let keyY;
-      if (yDistance >= 0) keyY = 'ArrowDown'
-      else if (yDistance <= 0) keyY = 'ArrowUp'
+      if (yDistance > 3) keyY = 'ArrowDown'
+      else if (yDistance < -3) keyY = 'ArrowUp'
+      console.log(yDistance)
       if (( keyY === 'ArrowUp' ||
             keyY === 'ArrowDown'
           ) && !this.keys.includes(keyY)) {
