@@ -1,7 +1,10 @@
 export class InputHandler {
   constructor() {
-    // for keyboard:
+
     this.keys = [];
+
+
+    // for keyboard:
     window.addEventListener('keydown', e => {
       if (( e.key === 'ArrowDown' ||
             e.key === 'ArrowUp' ||
@@ -11,7 +14,7 @@ export class InputHandler {
           ) && this.keys.indexOf(e.key) === -1) {
         this.keys.push(e.key)
       }
-      // console.log(e.key, `[${this.keys}]`)
+      // console.log(`[${this.keys}]`)
     })
     window.addEventListener('keyup', e => {
       if (e.key === 'ArrowDown' ||
@@ -21,8 +24,9 @@ export class InputHandler {
           e.key === 'Enter') {
         this.keys.splice(this.keys.indexOf(e.key), 1)
       }
-      // console.log(e.key, `[${this.keys}]`)
+      // console.log(`[${this.keys}]`)
     })
+
 
     // for mobile devices:
     this.duration = 0
@@ -36,24 +40,37 @@ export class InputHandler {
       this.duration = e.timeStamp - this.duration
       this.xPos.length = 0
       this.yPos.length = 0
-      this.keys.splice(this.keys.indexOf(e.key), 1)
-      // console.log(e.type, `| duration = ${this.duration}s`)
+      this.keys.length = 0
+      console.log(this.keys)
     })
     window.addEventListener('touchmove', e => {
       this.xPos.push(e.changedTouches[0].clientX)
       this.yPos.push(e.changedTouches[0].clientY)
+
       // detect movement right/left and up/down
       const xDistance = this.xPos[this.xPos.length - 1] - this.xPos[this.xPos.length - 2]
       const yDistance = this.yPos[this.yPos.length - 1] - this.yPos[this.yPos.length - 2]
-      if (xDistance > 0) {
-        this.keys.splice(this.keys.indexOf(e.key), 1)
-        this.keys.push('ArrowRight')
-      } else if (xDistance < 0) {
-        this.keys.splice(this.keys.indexOf(e.key), 1)
-        this.keys.push('ArrowLeft')
+      // right/left
+      let keyX;
+      if (xDistance >= 0) keyX = 'ArrowRight'
+      else if (xDistance <= 0) keyX = 'ArrowLeft'
+      if (( keyX === 'ArrowLeft' ||
+            keyX === 'ArrowRight'
+          ) && !this.keys.includes(keyX)) {
+        this.keys = this.keys.filter(el => el !== 'ArrowLeft' && el !== 'ArrowRight')
+        this.keys.push(keyX)
       }
-      // console.log(xDistance > 0 ? 'right' : 'left')
-      // console.log(yDistance > 0 ? 'down' : 'up')
+      // up/down
+      let keyY;
+      if (yDistance >= 0) keyY = 'ArrowDown'
+      else if (yDistance <= 0) keyY = 'ArrowUp'
+      if (( keyY === 'ArrowUp' ||
+            keyY === 'ArrowDown'
+          ) && !this.keys.includes(keyY)) {
+        this.keys = this.keys.filter(el => el !== 'ArrowUp' && el !== 'ArrowDown')
+        this.keys.push(keyY)
+      }
+      // console.log(this.keys)
     })
   }
 }
