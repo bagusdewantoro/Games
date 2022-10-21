@@ -24,16 +24,29 @@ window.addEventListener('load', () => {
     }
   }
 
-  const game = new Game(canvas.width, canvas.height)
-  console.log(game);
+  const game = new Game(canvas.width, canvas.height);
+  // console.log(game);
 
   (function animate() {
+    // ==================================
     // clear canvas each time we update and draw:
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     // then we can update & draw the new
     game.update()
     game.draw(ctx)
     requestAnimationFrame(animate)
+    // ==================================
+
+    // // TEST AT THE LOWER FPS: ==============
+    // setTimeout(() => {
+    //   // clear canvas each time we update and draw:
+    //   ctx.clearRect(0, 0, canvas.width, canvas.height)
+    //   // then we can update & draw the new
+    //   game.update()
+    //   game.draw(ctx)
+    //   requestAnimationFrame(animate)
+    // }, 200) // ==============================
+
   })()
 
 });
