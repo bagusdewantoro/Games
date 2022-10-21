@@ -41,7 +41,7 @@ export class InputHandler {
       this.xPos.length = 0
       this.yPos.length = 0
       this.keys.length = 0
-      console.log(this.keys)
+      // console.log(this.keys)
     })
     window.addEventListener('touchmove', e => {
       this.xPos.push(e.changedTouches[0].clientX)

@@ -13,11 +13,15 @@ export class Player {
     this.height = 91.3
     this.x = 0
     // this.y = 100
-    this.y = this.game.height - this.height
-    // player image:
+    this.y = this.game.height - this.height - this.game.groundMargin
+    // player image & FPS control:
     this.image = document.getElementById('player')
     this.frameX = 0 // try change this to 1,2,3,.. !
     this.frameY = 0 // try change this to 1,2,3,.. !
+    this.maxFrame;
+    this.fps = 20;
+    this.frameInterval = 1000/this.fps
+    this.frameTimer = 0;
     // vertical movement:
     this.vy = 0 // vertical speed before 'ArrowUp'
     this.weight = 1
@@ -26,11 +30,12 @@ export class Player {
     this.maxSpeed = 10
     // Player State Management:
     this.states = [new Sitting(this), new Running(this), new Jumping(this), new Falling(this)]
+    // array order above must be same with States enum in playerStates
     this.currentState = this.states[0]
     this.currentState.enter()
   }
 
-  update(input) {
+  update(input, deltaTime) {
     this.currentState.handleInput(input)
     // for every animation frame, we are going to move player coordinate
     // this.x++
@@ -69,7 +74,17 @@ export class Player {
       // // ====================
     }
     else this.vy = 0 // stop all vertical movement
-
+    // ========================
+    // Sprite Animation:
+    // if (this.frameX < this.maxFrame) this.frameX++
+    // else this.frameX = 0;
+    if (this.frameTimer > this.frameInterval) {
+      this.frameTimer = 0;
+      if (this.frameX < this.maxFrame) this.frameX++
+      else this.frameX = 0
+    } else {
+      this.frameTimer += deltaTime;
+    }
   }
 
   draw(context) {
@@ -86,11 +101,12 @@ export class Player {
   }
 
   onGround() { // method to check whether the player is flying or on ground
-    return this.y >= this.game.height - this.height
+    return this.y >= this.game.height - this.height - this.game.groundMargin
   }
 
-  setState(state){
+  setState(state, speed){
     this.currentState = this.states[state]
+    this.game.speed = this.game.maxSpeed * speed
     this.currentState.enter()
   }
 }
