@@ -62,7 +62,7 @@ export class InputHandler {
       }
       // up/down
       let keyY;
-      if (yDistance > 3) keyY = 'ArrowDown'
+      if (yDistance > 2) keyY = 'ArrowDown'
       else if (yDistance < -3) keyY = 'ArrowUp'
       // console.log(yDistance)
       if (( keyY === 'ArrowUp' ||

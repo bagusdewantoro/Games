@@ -1,6 +1,12 @@
 import { Player } from './player.js'
 import { InputHandler } from './input.js'
 import { Background } from './background.js'
+import {
+  FlyingEnemy,
+  ClimbingEnemy,
+  GroundEnemy,
+} from './enemies.js'
+
 
 window.addEventListener('load', () => {
   const canvas = document.getElementById('canvas1')
@@ -20,14 +26,40 @@ window.addEventListener('load', () => {
       // Above is as we have just imported Player class,..
       // ..with this argument -> the Game class itself
       this.input = new InputHandler()
+      this.enemies = [];
+      this.enemyTimer = 0;
+      this.enemyInterval = 1000;
     }
     update(deltaTime) {
       this.background.update();
       this.player.update(this.input.keys, deltaTime);
+      // handleEnemies
+      if (this.enemyTimer > this.enemyInterval) {
+        this.addEnemy();
+        this.enemyTimer = 0;
+      } else {
+        this.enemyTimer += deltaTime;
+      }
+      this.enemies.forEach(enemy => {
+        enemy.update(deltaTime);
+      })
     }
     draw(context) {
       this.background.draw(context); // write before the player.draw so it will be behind the player on the canvas
       this.player.draw(context);
+      this.enemies.forEach(enemy => {
+        enemy.draw(context)
+        // remove enemy that is off screen from the array
+        if (enemy.markedForDeletion) {
+          this.enemies.splice(this.enemies.indexOf(enemy), 1)
+        }
+      })
+    }
+    addEnemy() {
+      if (this.speed > 0 && Math.random() < 0.5) this.enemies.push(new GroundEnemy(this))
+      else if (this.speed > 0) this.enemies.push(new ClimbingEnemy(this))
+      this.enemies.push(new FlyingEnemy(this));
+      // console.log(this.enemies)
     }
   }
 
