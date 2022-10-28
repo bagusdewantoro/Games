@@ -36,6 +36,7 @@ export class Player {
   }
 
   update(input, deltaTime) {
+    this.checkCollision();
     this.currentState.handleInput(input)
     // for every animation frame, we are going to move player coordinate
     // this.x++
@@ -88,6 +89,8 @@ export class Player {
   }
 
   draw(context) {
+    // if debug = true:
+    if (this.game.debug) context.strokeRect(this.x, this.y, this.width, this.height)
     // context.fillStyle = 'red'
     // context.fillRect(this.x, this.y, this.width, this.height)
     context.drawImage(
@@ -108,5 +111,23 @@ export class Player {
     this.currentState = this.states[state]
     this.game.speed = this.game.maxSpeed * speed
     this.currentState.enter()
+  }
+
+  checkCollision() {
+    this.game.enemies.forEach(enemy => {
+      if (
+        enemy.x < this.x + this.width &&
+        enemy.x + enemy.width > this.x &&
+        enemy.y < this.y + this.height &&
+        enemy.y + enemy.height > this.y
+      ) {
+        // collision detected
+        enemy.markedForDeletion = true;
+        this.game.score++;
+        // console.log(this.game.score)
+      } else {
+        // no collission
+      }
+    })
   }
 }

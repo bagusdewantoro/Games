@@ -26,6 +26,8 @@ class Enemy {
   }
 
   draw(context) {
+    // if debug = true:
+    if (this.game.debug) context.strokeRect(this.x, this.y, this.width, this.height);
     context.drawImage(
       // from PNG:
       this.image,

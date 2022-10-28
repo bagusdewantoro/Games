@@ -6,6 +6,7 @@ import {
   ClimbingEnemy,
   GroundEnemy,
 } from './enemies.js'
+import { UI } from './UI.js'
 
 
 window.addEventListener('load', () => {
@@ -25,10 +26,18 @@ window.addEventListener('load', () => {
       this.player = new Player(this)
       // Above is as we have just imported Player class,..
       // ..with this argument -> the Game class itself
-      this.input = new InputHandler()
+      this.input = new InputHandler(this)
+      // UI:
+      this.UI = new UI(this);
+      // Enemies:
       this.enemies = [];
       this.enemyTimer = 0;
       this.enemyInterval = 1000;
+      // Debug mode:
+      this.debug = false;
+      // Score:
+      this.score = 0;
+      this.fontColor = 'black';
     }
     update(deltaTime) {
       this.background.update();
@@ -54,6 +63,7 @@ window.addEventListener('load', () => {
           this.enemies.splice(this.enemies.indexOf(enemy), 1)
         }
       })
+      this.UI.draw(context);
     }
     addEnemy() {
       if (this.speed > 0 && Math.random() < 0.5) this.enemies.push(new GroundEnemy(this))
