@@ -31,6 +31,7 @@ window.addEventListener('load', () => {
       this.UI = new UI(this);
       // Enemies:
       this.enemies = [];
+      this.particles = [];
       this.enemyTimer = 0;
       this.enemyInterval = 1000;
       // Debug mode:
@@ -38,11 +39,14 @@ window.addEventListener('load', () => {
       // Score:
       this.score = 0;
       this.fontColor = 'black';
+      // States:
+      this.player.currentState = this.player.states[0]
+      this.player.currentState.enter()
     }
     update(deltaTime) {
       this.background.update();
       this.player.update(this.input.keys, deltaTime);
-      // handleEnemies
+      // handleEnemies:
       if (this.enemyTimer > this.enemyInterval) {
         this.addEnemy();
         this.enemyTimer = 0;
@@ -52,6 +56,12 @@ window.addEventListener('load', () => {
       this.enemies.forEach(enemy => {
         enemy.update(deltaTime);
       })
+      // handle particles:
+      this.particles.forEach((particle, index) => {
+        particle.update();
+        if (particle.markedForDeletion) this.particles.splice(index, 1);
+      })
+      // console.log(this.particles)
     }
     draw(context) {
       this.background.draw(context); // write before the player.draw so it will be behind the player on the canvas
@@ -62,6 +72,9 @@ window.addEventListener('load', () => {
         if (enemy.markedForDeletion) {
           this.enemies.splice(this.enemies.indexOf(enemy), 1)
         }
+      })
+      this.particles.forEach(particle => {
+        particle.draw(context);
       })
       this.UI.draw(context);
     }
